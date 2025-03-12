@@ -1,8 +1,10 @@
-#!/bin/zsh
+#!/bin/bash
 
-# Copy the application to whish directory, overwriting if it exists
-mkdir -p ~/scripts/whish
-cp -r main.py src ~/scripts/whish/
+# Run build_clean script
+./build_clean.sh
 
-# Make the main script executable
-chmod +x ~/scripts/whish/main.py
+# Run build_app script
+./build_app.sh
+
+# Delete build_env directory recursively
+rm -rf build_env

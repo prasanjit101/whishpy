@@ -20,7 +20,7 @@ pip install py2app rumps pyaudio groq
 mkdir -p build_env/src
 cp -r src/* build_env/src/
 cp main.py build_env/
-cp whishpy.jpg build_env/
+cp whishpy.png build_env/
 cp setup.py build_env/
 
 # Change to the build directory and build the app

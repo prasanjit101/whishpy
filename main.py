@@ -11,10 +11,13 @@ import rumps
 from src.audio_recorder import AudioRecorder
 from src.transcription_service import TranscriptionService
 from src.text_inserter import TextInserter
+from src.circular_logger import logger, setup_logging
 
 class VoiceToTextApp(rumps.App):
     def __init__(self):
         super(VoiceToTextApp, self).__init__("🎙️", quit_button=None)
+        setup_logging()
+        logger.info("Application initialized")
         
         # Initialize components
         self.audio_recorder = AudioRecorder()
@@ -32,10 +35,12 @@ class VoiceToTextApp(rumps.App):
     
     def settings(self, _):
         """Handle settings window for API key management."""
+        logger.info("Opening settings")
         self.transcription_service._prompt_for_api_key()
     
     def quit_app(self, _):
         """Quit the application."""
+        logger.info("Application shutdown initiated")
         # Ensure all resources are cleaned up
         if self.audio_recorder.is_recording:
             self.audio_recorder.stop_recording()
@@ -50,8 +55,11 @@ class VoiceToTextApp(rumps.App):
     
     def _start_recording(self):
         """Start audio recording."""
+        logger.info("Starting recording")
         if not self.audio_recorder.start_recording():
-            rumps.alert("Recording Error", "Unable to start recording")
+            error_msg = "Unable to start recording"
+            logger.error(error_msg)
+            rumps.alert("Recording Error", error_msg)
             return
         
         self.title = "🔴"
@@ -59,10 +67,13 @@ class VoiceToTextApp(rumps.App):
     
     def _stop_recording(self):
         """Stop audio recording and process the audio."""
+        logger.info("Stopping recording")
         audio_file = self.audio_recorder.stop_recording()
         
         if not audio_file:
-            rumps.alert("Recording Error", "No audio file was recorded")
+            error_msg = "No audio file was recorded"
+            logger.error(error_msg)
+            rumps.alert("Recording Error", error_msg)
             return
         
         self.title = "⏳"
@@ -75,20 +86,26 @@ class VoiceToTextApp(rumps.App):
     def _process_recording(self, audio_file):
         """Process the recorded audio file."""
         try:
+            logger.info(f"Processing recording: {audio_file}")
             # Transcribe audio
             transcription = self.transcription_service.transcribe_audio(audio_file)
             
             if transcription:
+                logger.info("Transcription successful")
                 # Insert text at cursor
                 self.text_inserter.insert_text(transcription)
+            else:
+                logger.warning("Empty transcription received")
         except Exception as e:
+            logger.error(f"Error processing recording: {str(e)}")
             rumps.alert("Error", str(e))
         finally:
             # Clean up temp file
             try:
                 os.unlink(audio_file)
-            except:
-                pass
+                logger.debug(f"Cleaned up temp file: {audio_file}")
+            except Exception as e:
+                logger.error(f"Error cleaning up temp file: {str(e)}")
             
             # Reset UI
             self.title = "🎙️"

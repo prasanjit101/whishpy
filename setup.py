@@ -5,11 +5,11 @@ Setup configuration for building whishpy.app using py2app
 from setuptools import setup
 
 APP = ['main.py']
-DATA_FILES = ['whishpy.jpg']
+DATA_FILES = ['whishpy.png']
 OPTIONS = {
     'argv_emulation': False,
     'packages': ['rumps', 'src'],
-    'iconfile': 'whishpy.jpg',
+    'iconfile': 'whishpy.png',
     'plist': {
         'CFBundleName': 'Whishpy',
         'CFBundleDisplayName': 'Whishpy',
@@ -20,7 +20,7 @@ OPTIONS = {
         'NSMicrophoneUsageDescription': 'This app needs access to the microphone to record audio for transcription.',
         'NSHighResolutionCapable': True,
     },
-    'resources': ['whishpy.jpg'],
+    'resources': ['whishpy.png'],
     'excludes': ['tkinter', 'matplotlib', 'numpy', 'pandas'],
 }
 
