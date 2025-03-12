@@ -1,16 +1,22 @@
-**Current Focus:** Implementing robust click-to-start/stop recording.
+**Current Focus:** Refactoring codebase for better maintainability
 
 **Recent Changes:**
 
-* Added click-to-start/stop recording functionality.
-* Real time audio capture during click to start/stop mode.
-* Updated UI to reflect recording status.
+* Refactored code into modular components:
+  - AudioRecorder: Handles all audio recording
+  - TranscriptionService: Manages API communication
+  - TextInserter: Handles text insertion
+* Removed clipboard dependency
+* Improved error handling
+* Updated documentation
 
 **Next Steps:**
 
-* Debug the app
+* Test refactored components
+* Update README with new architecture
 
 **Active Decisions:**
 
-* Using rumps for menu bar application.
-* Streaming audio for click to start/stop.
+* Using modular design for better maintainability
+* Direct text insertion instead of clipboard
+* Separate concerns into dedicated classes
