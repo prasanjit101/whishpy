@@ -3,115 +3,163 @@
 a python script that can run inside of mac m1 os and transcribe my voice to text using open ai api and enter the text at my current pointer. 
 I want to use the python script with mac's shortcuts or automations whichever is better
 
-## Project Product Requirements Document (PRD)
+## Voice-to-Text Transcription Setup Guide
 
-**1. Introduction**
+This guide provides instructions for both the command-line script and the menu bar application.
 
-This document outlines the requirements for a macOS application that transcribes voice to text using the OpenAI Whisper API and inserts the transcribed text at the user's current cursor position. The application will be accessible through the macOS menu bar and offer flexible recording options.
+### Prerequisites
 
-**2. Goals**
+1. **Python 3.7+** (already installed on Mac M1)
+2. **Groq API Key** - You'll need to [create an account](https://platform.groq.com/signup) and get an API key
+3. **Required Python packages**
 
-* Provide a convenient and efficient way for users to transcribe voice to text on macOS.
-* Enable seamless insertion of transcribed text into any application.
-* Offer flexible recording options to cater to various user needs.
-* Create a user-friendly application accessible from the menu bar.
-* Provide a way to trigger the script automatically on login.
+### Installation Steps
 
-**3. Target Audience**
+1. **Install the required packages:**
 
-* Individuals who frequently need to transcribe voice to text.
-* Users who prefer voice input over typing.
-* Professionals who need to quickly capture notes or ideas.
-* Anyone seeking a convenient voice-to-text solution on macOS.
+For the command-line script:
+```bash
+pip3 install pyaudio wave groq pyperclip pynput
+```
 
-**4. Functional Requirements**
+For the menu bar application (includes all the above plus rumps):
+```bash
+pip3 install pyaudio wave groq pyperclip pynput rumps py2app
+```
 
-* **Voice Recording:**
-    * Capture audio from the user's microphone.
-    * Offer timed recording options (5s, 10s, 15s, 30s, custom).
-    * Implement click-to-start and click-to-stop recording functionality.
-    * Real time audio capture during click to start/stop mode.
-* **Transcription:**
-    * Utilize the OpenAI Whisper API to transcribe recorded audio.
-    * Handle background processing of audio to prevent system freezes.
-* **Text Insertion:**
-    * Copy the transcribed text to the clipboard.
-    * Simulate keyboard presses to paste the text at the current cursor position.
-* **Menu Bar Application:**
-    * Display a microphone icon (🎙️) in the macOS menu bar.
-    * Provide a menu with recording options and settings.
-    * Display visual status indicators (🎙️ Ready, 🔴 Recording, ⏳ Processing).
-    * Add a setting menu to configure the OpenAI API key.
-* **Settings:**
-    * Allow users to input and store their OpenAI API key.
-* **Startup:**
-    * Provide an option to automatically start the application on macOS login.
-* **Standalone Application (Optional):**
-    * Provide instructions to create a standalone macOS application using py2app.
+2. **Set up your Groq API key as an environment variable:**
 
-**5. Non-Functional Requirements**
+```bash
+echo 'export GROQ_API_KEY="your-api-key-here"' >> ~/.zshrc
+source ~/.zshrc
+```
 
-* **Performance:**
-    * Ensure minimal latency between voice input and text output.
-    * Efficient background processing to avoid system slowdowns.
-* **Usability:**
-    * Intuitive and easy-to-use interface.
-    * Clear and concise instructions for setup and usage.
-* **Reliability:**
-    * Stable and consistent performance.
-    * Robust error handling.
-* **Security:**
-    * Secure storage of the OpenAI API key.
-* **Compatibility:**
-    * Compatible with macOS M1 and later.
+3. **Save the Python script:**
+   - Save the provided script to a location of your choice (e.g., `~/scripts/whish.py`)
+   - Make it executable: `chmod +x ~/scripts/whish.py`
 
-**6. User Interface (UI) Requirements**
+### Setting Up with macOS Shortcuts (Recommended)
 
-* **Menu Bar Icon:**
-    * Microphone icon (🎙️) to indicate the application's presence.
-    * Status indicators:
-        * 🎙️: Ready
-        * 🔴: Recording
-        * ⏳: Processing
-* **Menu Items:**
-    * Timed recording options (5s, 10s, 15s, 30s, Custom).
-    * "Click to Start/Stop Recording" option.
-    * Settings menu.
-* **Settings Window:**
-    * Text field for entering the OpenAI API key.
+1. **Open the Shortcuts app** on your Mac
 
-**7. Technical Requirements**
+2. **Create a new shortcut:**
+   - Click the "+" button to create a new shortcut
+   - Name it something like "Voice to Text"
 
-* **Programming Language:** Python
-* **Libraries:**
-    * PyAudio (for audio recording)
-    * OpenAI Python library (for Whisper API)
-    * rumps (for menu bar application)
-    * py2app (Optional, for standalone application)
-    * pyperclip (for clipboard access)
-    * pynput (for keyboard simulation)
-* **Operating System:** macOS M1 and later
-* **API:** OpenAI Whisper API
+3. **Add a "Run Shell Script" action:**
+   - Search for "Run Shell Script" in the actions panel and add it
+   - Set the shell to `/bin/zsh`
+   - Enter the following command:
+     ```bash
+     /usr/bin/python3 /path/to/your/whish.py --duration 5
+     ```
+   - Adjust the duration as needed (default is 5 seconds)
 
-**8. Setup and Installation**
+4. **Add a keyboard shortcut:**
+   - Click on the ⓘ icon in the top right corner of the shortcut
+   - Click "Add Keyboard Shortcut"
+   - Choose a keyboard combination (e.g., Option+Command+T)
 
-* Provide clear and detailed setup instructions.
-* Include instructions for installing required Python packages.
-* Explain how to obtain and configure the OpenAI API key.
-* Provide instructions for creating a macOS Shortcut or Automator workflow (if applicable).
-* Provide instructions for adding the application to Login Items.
-* Provide instructions to create a standalone application using py2app.
+### Setting Up with Automator (Alternative)
 
-**9. Testing**
+1. **Open Automator** and create a new Quick Action
 
-* Unit testing for individual components.
-* Integration testing for end-to-end functionality.
-* User acceptance testing (UAT) to ensure usability and reliability.
+2. **Configure the workflow:**
+   - Set "Workflow receives" to "no input" in "any application"
 
-**10. Future Considerations**
+3. **Add a "Run Shell Script" action:**
+   - Search for and add the "Run Shell Script" action
+   - Set the shell to `/bin/zsh`
+   - Enter the following command:
+     ```bash
+     /usr/bin/python3 /path/to/your/whish.py --duration 5
+     ```
 
-* Support for multiple languages.
-* Integration with other cloud services.
-* Advanced settings for audio input and output.
-* Adding a setting to choose the openai model.
-* Adding a setting to choose the output language.
+4. **Save the workflow** with a descriptive name like "Voice to Text"
+
+5. **Add a keyboard shortcut:**
+   - Open System Settings > Keyboard > Keyboard Shortcuts
+   - Select "Services" in the left panel
+   - Find your "Voice to Text" service and assign a keyboard shortcut
+
+### Usage
+
+1. Place your cursor where you want the transcribed text to appear
+2. Trigger the shortcut (using the keyboard shortcut you assigned)
+3. Speak clearly for the duration set (default is 5 seconds)
+4. Wait a moment for the audio to be processed and transcribed
+5. The transcribed text will be automatically pasted at your cursor position
+
+### Menu Bar Application Setup
+
+1. **Save the menubar app script:**
+   - Save the provided menu bar script to a location of your choice (e.g., `~/scripts/whish.py`)
+   - Make it executable: `chmod +x ~/scripts/whish.py`
+
+2. **Run the app:**
+   ```bash
+   python3 ~/scripts/whish.py
+   ```
+
+3. **Setting up to start automatically:**
+   - Open System Settings > General > Login Items
+   - Click the "+" button
+   - Navigate to your script and add it
+
+4. **Building a standalone app (optional):**
+   
+   Create a file named `setup.py` in the same directory as your script:
+   ```python
+   from setuptools import setup
+
+   APP = ['whish.py']
+   DATA_FILES = []
+   OPTIONS = {
+       'argv_emulation': True,
+       'plist': {
+           'LSUIElement': True,
+       },
+       'packages': ['rumps', 'pyaudio', 'groq', 'pyperclip', 'pynput'],
+   }
+
+   setup(
+       app=APP,
+       data_files=DATA_FILES,
+       options={'py2app': OPTIONS},
+       setup_requires=['py2app'],
+   )
+   ```
+
+   Then build the app:
+   ```bash
+   python3 setup.py py2app
+   ```
+
+   This will create a standalone app in the `dist` folder that you can move to your Applications folder.
+
+### Using the Menu Bar App
+
+1. Click on the microphone icon (🎙️) in the menu bar
+2. Select one of the preset recording durations or choose "Custom Duration..."
+3. Speak for the selected duration
+4. The app will transcribe your speech and paste it at your current cursor position
+5. The icon will change to indicate status:
+   - 🎙️ - Ready
+   - 🔴 - Recording
+   - ⏳ - Processing
+
+#### Click-to-Start/Stop Recording
+1. Click directly on the microphone icon in the menu bar to start recording
+2. Click again when you're done to stop recording and start transcription
+3. Alternatively, use the "Click to Start/Stop Recording" menu item
+
+### Troubleshooting
+
+- **Microphone permissions**: Make sure to grant microphone access to Terminal/Shortcuts/Your app when prompted
+- **API key issues**: Verify your Groq API key is correctly set in the environment or through the app settings
+- **PyAudio installation problems**: If you encounter issues installing PyAudio, try:
+  ```bash
+  brew install portaudio
+  pip3 install --global-option='build_ext' --global-option='-I/opt/homebrew/include' --global-option='-L/opt/homebrew/lib' pyaudio
+  ```
+- **Menu bar app not showing**: Some Mac screens (especially those with notches) can hide menu bar items. Try clicking in the menu bar area where the app should be.

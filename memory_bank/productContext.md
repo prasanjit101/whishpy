@@ -9,7 +9,7 @@
 **Functionality:**
 
 * Record voice via menu bar icon.
-* Transcribe using OpenAI Whisper.
+* Transcribe using Groq Whisper.
 * Paste text at cursor.
 
 **User Experience:**
