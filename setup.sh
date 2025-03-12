@@ -1,8 +1,8 @@
 #!/bin/zsh
 
-# Copy the srcipts to whish.py, overwriting if it exists
-mkdir -p ~/scripts
-cp main.py ~/scripts/whish.py
+# Copy the application to whish directory, overwriting if it exists
+mkdir -p ~/scripts/whish
+cp -r main.py src ~/scripts/whish/
 
-# Make the copied script executable
-chmod +x ~/scripts/whish.py
+# Make the main script executable
+chmod +x ~/scripts/whish/main.py
