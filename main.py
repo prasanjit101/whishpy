@@ -36,6 +36,9 @@ class VoiceToTextApp(rumps.App):
     
     def quit_app(self, _):
         """Quit the application."""
+        # Ensure all resources are cleaned up
+        if self.audio_recorder.is_recording:
+            self.audio_recorder.stop_recording()
         rumps.quit_application()
     
     def toggle_recording(self, _):
@@ -89,6 +92,7 @@ class VoiceToTextApp(rumps.App):
             
             # Reset UI
             self.title = "🎙️"
+            self.click_to_record_item.title = "Click to Start Recording"
 
 if __name__ == "__main__":
     # Add support for clicking directly on the menu bar icon
