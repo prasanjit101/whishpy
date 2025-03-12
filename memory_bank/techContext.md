@@ -13,7 +13,7 @@
 
 * macOS M1 or later.
 * Virtual environment for dependencies.
-* OpenAI API key.
+* Groq API key.
 
 **Technical Constraints:**
 

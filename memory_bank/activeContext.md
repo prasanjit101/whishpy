@@ -8,13 +8,9 @@
 
 **Next Steps:**
 
-* Thorough testing of recording functionality.
-* Implement settings for OpenAI model selection.
-* Implement settings for output language selection.
-* Create standalone app using py2app.
+* Debug the app
 
 **Active Decisions:**
 
 * Using rumps for menu bar application.
-* Using pynput for keyboard simulation.
 * Streaming audio for click to start/stop.

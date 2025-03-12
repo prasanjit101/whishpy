@@ -9,7 +9,7 @@
 **Technical Decisions:**
 
 * Python for cross-platform compatibility.
-* OpenAI Whisper for accurate transcription.
+* Groq Whisper for accurate transcription.
 * Streaming audio for click to start/stop.
 
 **Design Patterns:**
