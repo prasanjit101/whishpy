@@ -93,8 +93,9 @@ source ~/.zshrc
 ### Menu Bar Application Setup
 
 1. **Save the menubar app script:**
-   - Save the provided menu bar script to a location of your choice (e.g., `~/scripts/whish.py`)
-   - Make it executable: `chmod +x ~/scripts/whish.py`
+   - Make `./setup.sh` executable: `chmod +x setup.sh`
+   - Run the script (e.g., `./setup.sh`) to create the `whish.py` script - 
+      It will make the script executable and save it to `~/scripts/whish.py`
 
 2. **Run the app:**
    ```bash

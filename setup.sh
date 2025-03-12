@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-# Copy main.py to ~/scripts/whish.py, overwriting if it exists
+# Copy the srcipts to whish.py, overwriting if it exists
 mkdir -p ~/scripts
 cp main.py ~/scripts/whish.py
 

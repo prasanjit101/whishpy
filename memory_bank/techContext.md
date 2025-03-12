@@ -3,7 +3,7 @@
 
 * Python 3.x
 * PyAudio
-* Groq Python library
+* Groq Python library (using Groq Whisper for transcription)
 * rumps
 * pynput
 * py2app (optional)
