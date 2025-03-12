@@ -3,6 +3,7 @@ import rumps
 from groq import Groq
 import time
 from typing import Optional
+from .config import save_api_key, load_api_key
 
 class TranscriptionService:
     def __init__(self):
@@ -12,13 +13,13 @@ class TranscriptionService:
         self.retry_delay = 2  # seconds
 
     def _load_api_key(self):
-        """Load API key from environment or prompt user."""
-        self.api_key = os.environ.get("GROQ_API_KEY")
+        """Load API key from config file or prompt user."""
+        self.api_key = load_api_key()
         if not self.api_key:
             self._prompt_for_api_key()
 
     def _prompt_for_api_key(self):
-        """Prompt user for API key."""
+        """Prompt user for API key and save it to config."""
         response = rumps.Window(
             "Please enter your Groq API Key:",
             "API Key Setup",
@@ -28,7 +29,7 @@ class TranscriptionService:
         
         if response.clicked and response.text:
             self.api_key = response.text
-            os.environ["GROQ_API_KEY"] = self.api_key
+            save_api_key(self.api_key)
 
     def transcribe_audio(self, audio_file_path: str) -> Optional[str]:
         """Transcribe audio using Groq's Whisper API with retry logic."""
