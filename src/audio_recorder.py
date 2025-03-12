@@ -39,8 +39,9 @@ class AudioRecorder:
         if not self.is_recording:
             return None
 
-        # Check if we have any audio data
-        if not self.frames or len(b''.join(self.frames)) < self.sample_rate:  # Less than 1 second of audio
+        # Updated duration check using captured frames
+        duration = (len(self.frames) * self.chunk) / self.sample_rate
+        if not self.frames or duration < 1.0:
             self.stream.stop_stream()
             self.stream.close()
             self.audio.terminate()

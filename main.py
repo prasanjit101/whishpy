@@ -62,12 +62,6 @@ class VoiceToTextApp(rumps.App):
             rumps.alert("Recording Error", "No audio file was recorded")
             return
         
-        # Check minimum recording duration
-        if self.audio_recorder.get_recording_duration() < 1.0:
-            rumps.alert("Recording too short", "Recording must be at least 1 second long")
-            self.title = "🎙️"
-            return
-        
         self.title = "⏳"
         
         # Process recording in background thread
