@@ -12,10 +12,24 @@ This guide provides instructions for both the command-line script and the menu b
 1. **Python 3.7+** (already installed on Mac M1)
 2. **Groq API Key** - You'll need to [create an account](https://platform.groq.com/signup) and get an API key
 
-### Set up
+### Automated Installation Steps
 
-See the [setup.md](setup.md) file for how to set up/install and use the project.
+1. **Install the required packages:**
 
+```bash
+./build_app.sh
+```
+
+2. **Run the app:**
+move the dist/Whishpy.app to your Applications folder
+
+3. **Run the app:**
+open the app and it will ask you to allow microphone access
+
+4. **Use the app:**
+click the microphone icon in the menu bar and start recording
+
+For more information on how to use the app, see the [setup.md](setup.md) file.
 
 
 ### Using the Menu Bar App
