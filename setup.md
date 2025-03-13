@@ -57,9 +57,8 @@ source ~/.zshrc
    - Set the shell to `/bin/zsh`
    - Enter the following command:
      ```bash
-     /usr/bin/python3 /path/to/your/whish.py --duration 5
+     /usr/bin/python3 /path/to/your/whish.py
      ```
-   - Adjust the duration as needed (default is 5 seconds)
 
 4. **Add a keyboard shortcut:**
    - Click on the ⓘ icon in the top right corner of the shortcut
@@ -78,7 +77,7 @@ source ~/.zshrc
    - Set the shell to `/bin/zsh`
    - Enter the following command:
      ```bash
-     /usr/bin/python3 /path/to/your/whish.py --duration 5
+     /usr/bin/python3 /path/to/your/whish.py
      ```
 
 4. **Save the workflow** with a descriptive name like "Voice to Text"

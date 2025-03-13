@@ -91,9 +91,9 @@ class VoiceToTextApp(rumps.App):
             transcription = self.transcription_service.transcribe_audio(audio_file)
             
             if transcription:
-                logger.info("Transcription successful")
+                logger.info(f"Transcription successful: {transcription}")
                 # Insert text at cursor
-                self.text_inserter.insert_text(transcription)
+                self.text_inserter.insert_text_with_shortcut(transcription)
             else:
                 logger.warning("Empty transcription received")
         except Exception as e:

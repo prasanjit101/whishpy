@@ -18,6 +18,7 @@ OPTIONS = {
         'CFBundleShortVersionString': '0.1.0',
         'LSMinimumSystemVersion': '10.10',
         'NSMicrophoneUsageDescription': 'This app needs access to the microphone to record audio for transcription.',
+        'NSPasteboardUsageDescription': 'This app needs access to the clipboard to paste transcribed text.',
         'NSHighResolutionCapable': True,
     },
     'resources': ['whishpy.png'],
