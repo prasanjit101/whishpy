@@ -20,15 +20,26 @@ class TextInserter:
             time.sleep(0.01)  # Small delay for reliability
 
     def insert_text_with_shortcut(self, text):
-        """Insert text using Command+V shortcut."""
+        """Insert text using Command+V shortcut with fallback to direct typing."""
         if not text:
             self.logger.warning("Empty text received for shortcut insertion")
             return
         
-        # Copy the text to the clipboard
-        pyperclip.copy(text)
-        logger.info(f"Text copied to clipboard: {text}")
-        # Simulate Command+V (paste)
-        with self.keyboard.pressed(Key.cmd):
-            self.keyboard.press('v')
-            self.keyboard.release('v')
+        try:
+            # Copy the text to the clipboard
+            pyperclip.copy(text)
+            logger.info(f"Text copied to clipboard: {text}")
+            
+            # Try paste shortcut first
+            try:
+                with self.keyboard.pressed(Key.cmd):
+                    self.keyboard.press('v')
+                    self.keyboard.release('v')
+                logger.info("Paste shortcut executed successfully")
+            except Exception as e:
+                logger.warning(f"Paste shortcut failed: {str(e)}. Falling back to direct typing")
+                self.insert_text(text)
+                
+        except Exception as e:
+            logger.error(f"Failed to insert text: {str(e)}")
+            raise
