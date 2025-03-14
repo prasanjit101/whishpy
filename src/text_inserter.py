@@ -64,10 +64,8 @@ class TextInserter:
             # Get the selected text
             selected_text = pyperclip.paste()
             
-            # Verify we got actual selected text
-            if selected_text == original_clipboard or selected_text == '':
-                self.logger.warning("No text selected or selection failed")
-                return ""
+            if selected_text == '':
+                selected_text = original_clipboard
             
             # Restore original clipboard content
             pyperclip.copy(original_clipboard)
