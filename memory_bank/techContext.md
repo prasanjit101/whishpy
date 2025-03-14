@@ -7,6 +7,7 @@
 * rumps
 * pynput
 * py2app (optional)
+* LLM libraries
 
 **File Structure:**
 
@@ -15,7 +16,9 @@
   - audio_recorder.py - Handles audio recording
   - transcription_service.py - Manages API communication
   - text_inserter.py - Handles text insertion
+  - llm.py - Handles LLM integration
   - __init__.py - Package initialization
+* marketing/ - Contains marketing materials
 
 **Development Setup:**
 
@@ -30,6 +33,9 @@
 * API key dependency
 * Audio permissions
 * Direct text insertion requires accessibility permissions
+* Improved API key loading with error handling for missing config file.
+* Implemented logging functionality with a circular logger for better error tracking and application monitoring.
+* Refactored setup script to copy application files to a dedicated 'whish' directory and ensure main script is executable
 
 **Dependencies:**
 

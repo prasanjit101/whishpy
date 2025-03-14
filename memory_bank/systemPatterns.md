@@ -22,6 +22,9 @@
   - Proper cleanup of audio resources
   - API error handling and retries
   - Resource cleanup on application exit
+* LLM integration for response generation
+* Improved text insertion method with fallback to direct typing
+* UI updates for better user experience and maintainability
 
 **Component Relationships:**
 

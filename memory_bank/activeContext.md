@@ -18,6 +18,15 @@
 
 * If text insertion fails, copy the text to the clipboard
 * add language support for other languages - Hindi, Spanish, French, Japanese
+* Implemented prompt functionality in VoiceToTextApp, allowing users to generate responses based on selected text.
+* Added max recording time feature with settings management and background processing
+* Improved text insertion method by adding fallback to direct typing if paste shortcut fails.
+* Implemented text insertion via Command+V shortcut for better user experience.
+* Implemented logging functionality with a circular logger for better error tracking and application monitoring.
+* Refactored API key management to load from a config file and save user input, enhancing security and usability.
+* Added LLM class for response generation and refactor transcription service to utilize LLM for audio transcriptions, improving modularity and code organization.
+* Enhanced LLM response generation with context.
+* Updated UI elements for better user experience and maintainability.
 
 **Active Decisions:**
 
