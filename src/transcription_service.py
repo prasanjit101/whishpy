@@ -58,5 +58,16 @@ class TranscriptionService:
                 if attempt < self.max_retries - 1:
                     time.sleep(self.retry_delay)
                 continue
-        
         raise Exception(f"Transcription failed after {self.max_retries} attempts: {str(last_error)}")
+
+    def generate_response_with_context(self, prompt: str, context: str) -> str:
+        """Generate a response from the LLM with the given prompt and context."""
+        if not self.api_key:
+            raise ValueError("API key is not set")
+        
+        llm = LLM(self.api_key)
+        try:
+            response = llm.generate_response(prompt, context)
+            return response
+        except Exception as e:
+            raise Exception(f"LLM generation failed: {str(e)}")

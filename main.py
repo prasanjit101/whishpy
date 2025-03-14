@@ -33,8 +33,11 @@ class VoiceToTextApp(rumps.App):
         
         # Setup menu
         self.click_to_record_item = rumps.MenuItem("Click to Start/Stop Recording", callback=self.toggle_recording)
+        self.prompt_item = rumps.MenuItem("Prompt", callback=self.prompt_with_selected_text)
         self.menu = [
             self.click_to_record_item,
+            None,  # Separator
+            self.prompt_item,
             None,  # Separator
             {
                 "Settings": [
@@ -44,6 +47,7 @@ class VoiceToTextApp(rumps.App):
             },
             rumps.MenuItem("Quit", callback=self.quit_app)
         ]
+        self.is_prompt_mode = False
     
     def set_api_key(self, _):
         """Handle settings window for API key management."""
@@ -99,9 +103,12 @@ class VoiceToTextApp(rumps.App):
     
     def toggle_recording(self, _):
         """Toggle between starting and stopping recording."""
+        if self.is_prompt_mode:
+            return
         if self.audio_recorder.is_recording:
             self._stop_recording()
         else:
+            self.click_to_record_item.title = "Click to Stop Recording"
             self._start_recording()
     
     def _start_recording(self):
@@ -114,7 +121,6 @@ class VoiceToTextApp(rumps.App):
             return
         
         self.title = "🔴"
-        self.click_to_record_item.title = "Click to Stop Recording"
     
     def _stop_recording(self):
         """Stop audio recording and process the audio."""
@@ -128,9 +134,81 @@ class VoiceToTextApp(rumps.App):
             return
         
         self.title = "⏳"
+        # Determine which processing function to use
+        if self.is_prompt_mode:
+            thread = threading.Thread(target=self._process_prompt_recording, args=(audio_file,))
+        else:
+            thread = threading.Thread(target=self._process_recording, args=(audio_file,))
+        thread.daemon = True
+        thread.start()
+    
+    def prompt_with_selected_text(self, _):
+        """Handle the Prompt menu item click."""
+        if self.audio_recorder.is_recording:
+            if self.is_prompt_mode: 
+                self._stop_recording()
+            else:
+                return
+        else:
+            self.is_prompt_mode = True
+            self.prompt_item.title = "Generating...Click to Stop"
+            self._start_recording()
         
-        # Process recording in background thread
-        thread = threading.Thread(target=self._process_recording, args=(audio_file,))
+    
+    def _process_prompt_recording(self, audio_file):
+        """Process the recording for prompt functionality."""
+        def process():
+            try:
+                logger.info(f"Processing prompt recording: {audio_file}")
+
+                # Transcribe audio
+                transcription = self.transcription_service.transcribe_audio(audio_file)
+                if not transcription:
+                    logger.warning("Empty transcription received")
+                    return
+
+                # Get selected text
+                selected_text = self.text_inserter.get_selected_text()
+
+                # Generate response
+                response = self.transcription_service.generate_response_with_context(
+                    transcription,
+                    selected_text
+                )
+
+                # Show response
+                # rumps.notification(
+                #     "Whishpy Response",
+                #     "Here's the response to your prompt:",
+                #     response
+                # )
+                self.text_inserter.insert_text_with_shortcut(response)
+
+            except ValueError as e:
+                logger.error(f"Value Error processing prompt recording: {str(e)}")
+                rumps.alert("Error", str(e))
+            except OSError as e:
+                logger.error(f"OS Error processing prompt recording: {str(e)}")
+                rumps.alert("Error", str(e))
+            except Exception as e:
+                logger.error(f"General Error processing prompt recording: {str(e)}")
+                rumps.alert("Error", str(e))
+            finally:
+                # Clean up temp file
+                try:
+                    os.unlink(audio_file)
+                    logger.debug(f"Cleaned up temp file: {audio_file}")
+                except Exception as e:
+                    logger.error(f"Error cleaning up temp file: {str(e)}")
+
+                # Reset UI
+                self.title = "🎙️"
+                self.prompt_item.title = "Prompt"
+                self.click_to_record_item.title = "Click to Start Recording"
+                self.is_prompt_mode = False
+
+        # Run processing in background thread
+        thread = threading.Thread(target=process)
         thread.daemon = True
         thread.start()
     
@@ -144,8 +222,9 @@ class VoiceToTextApp(rumps.App):
                 
                 if transcription:
                     logger.info(f"Transcription successful: {transcription}")
-                    # Insert text at cursor
-                    self.text_inserter.insert_text_with_shortcut(transcription)
+                    # Only insert text if this is a regular recording
+                    if not self.prompt_item.title == "Recording... Click to Stop":
+                        self.text_inserter.insert_text_with_shortcut(transcription)
                 else:
                     logger.warning("Empty transcription received")
             except Exception as e:

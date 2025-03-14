@@ -43,3 +43,36 @@ class TextInserter:
         except Exception as e:
             logger.error(f"Failed to insert text: {str(e)}")
             raise
+
+    def get_selected_text(self):
+        """Get the currently selected text from the clipboard."""
+        try:
+            # Store current clipboard content
+            original_clipboard = pyperclip.paste()
+            
+            # Clear clipboard to ensure we get fresh selection
+            pyperclip.copy('')
+            
+            # Copy selected text to clipboard
+            with self.keyboard.pressed(Key.cmd):
+                self.keyboard.press('c')
+                self.keyboard.release('c')
+            
+            # Add delay to ensure clipboard is updated
+            time.sleep(0.2)
+            
+            # Get the selected text
+            selected_text = pyperclip.paste()
+            
+            # Verify we got actual selected text
+            if selected_text == original_clipboard or selected_text == '':
+                self.logger.warning("No text selected or selection failed")
+                return ""
+            
+            # Restore original clipboard content
+            pyperclip.copy(original_clipboard)
+            self.logger.info(f"Selected text from clipboard: {selected_text}")
+            return selected_text
+        except Exception as e:
+            self.logger.error(f"Failed to get selected text from clipboard: {str(e)}")
+            return ""
