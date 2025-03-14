@@ -174,3 +174,4 @@ cython_debug/
 .pypirc
 
 build_env/
+marketing/

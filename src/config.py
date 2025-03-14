@@ -13,9 +13,9 @@ def save_api_key(api_key):
 
 def load_api_key():
     """Load API key from config file if it exists"""
-    if not CONFIG_FILE.exists():
+    try:
+        with open(CONFIG_FILE, 'r') as f:
+            config = json.load(f)
+            return config.get('api_key')
+    except FileNotFoundError:
         return None
-        
-    with open(CONFIG_FILE, 'r') as f:
-        config = json.load(f)
-        return config.get('api_key')
