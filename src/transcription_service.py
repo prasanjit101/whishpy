@@ -1,6 +1,6 @@
 import os
 import rumps
-from groq import Groq
+from src.llm import LLM
 import time
 from typing import Optional
 from .config import save_api_key, load_api_key
@@ -36,18 +36,22 @@ class TranscriptionService:
         if not self.api_key:
             raise ValueError("API key is not set")
 
-        groq = Groq(api_key=self.api_key)
+        llm = LLM(self.api_key)
         last_error = None
         
         for attempt in range(self.max_retries):
             try:
                 with open(audio_file_path, "rb") as audio_file:
-                    response = groq.audio.transcriptions.create(
-                        file=(audio_file_path, audio_file.read()),
-                        model="whisper-large-v3-turbo",
-                        language="en",
-                        timeout=10  # 10 second timeout
-                    )
+                    try:
+                        response = llm.groq.audio.transcriptions.create(
+                            file=(audio_file_path, audio_file.read()),
+                            model="whisper-large-v3-turbo",
+                            language="en",
+                            timeout=10  # 10 second timeout
+                        )
+                    except Exception as e:
+                        print(f"Transcription attempt {attempt + 1} failed: {e}")
+                        raise
                 return response.text
             except Exception as e:
                 last_error = e
