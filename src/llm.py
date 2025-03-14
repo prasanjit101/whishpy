@@ -15,7 +15,7 @@ class LLM:
                 {"role": "system", "content": "You are a helpful assistant. You are given a prompt and some context. \
                  Use the context to help you answer the prompt. Always respond concisely with only what's important \
                  unless mentioned by the user otherwise."},
-                {"role": "user", "content": prompt + ( "\n\nHere is some context that might be relevant to the prompt: " + context ) if context else ""}
+                {"role": "user", "content": prompt +  ("\n\nHere is some context that might be relevant to the prompt: " + context  if context else "")}
             ]
         )
         return response.choices[0].message.content

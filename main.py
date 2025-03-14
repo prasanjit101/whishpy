@@ -33,7 +33,7 @@ class VoiceToTextApp(rumps.App):
         
         # Setup menu
         self.click_to_record_item = rumps.MenuItem("Click to Start/Stop Recording", callback=self.toggle_recording)
-        self.prompt_item = rumps.MenuItem("Prompt", callback=self.prompt_with_selected_text)
+        self.prompt_item = rumps.MenuItem("Ask AI", callback=self.prompt_ai_with_selected_text)
         self.menu = [
             self.click_to_record_item,
             None,  # Separator
@@ -142,7 +142,7 @@ class VoiceToTextApp(rumps.App):
         thread.daemon = True
         thread.start()
     
-    def prompt_with_selected_text(self, _):
+    def prompt_ai_with_selected_text(self, _):
         """Handle the Prompt menu item click."""
         if self.audio_recorder.is_recording:
             if self.is_prompt_mode: 
