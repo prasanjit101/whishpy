@@ -19,8 +19,15 @@ class VoiceToTextApp(rumps.App):
         setup_logging()
         logger.info("Application initialized")
         
+        # Load max recording time from config
+        from src.config import load_max_recording_time
+        self.max_recording_time = load_max_recording_time()
+        
         # Initialize components
-        self.audio_recorder = AudioRecorder()
+        self.audio_recorder = AudioRecorder(
+            max_recording_time=self.max_recording_time,
+            stop_callback=self._process_recording
+        )
         self.transcription_service = TranscriptionService()
         self.text_inserter = TextInserter()
         
@@ -29,14 +36,58 @@ class VoiceToTextApp(rumps.App):
         self.menu = [
             self.click_to_record_item,
             None,  # Separator
-            rumps.MenuItem("Settings", callback=self.settings),
+            {
+                "Settings": [
+                    rumps.MenuItem("Set Max Recording Time...", callback=self.set_max_recording_time),
+                    rumps.MenuItem("Set API Key", callback=self.set_api_key),
+                ]
+            },
             rumps.MenuItem("Quit", callback=self.quit_app)
         ]
     
-    def settings(self, _):
+    def set_api_key(self, _):
         """Handle settings window for API key management."""
-        logger.info("Opening settings")
+        logger.info("Opening API key settings")
         self.transcription_service._prompt_for_api_key()
+
+    def set_max_recording_time(self, _):
+        """Set maximum recording time in minutes."""
+        from src.config import save_max_recording_time
+        
+        window = rumps.Window(
+            message="Enter max recording time in minutes (0 to disable):",
+            default_text=str(self.max_recording_time // 60 if self.max_recording_time else ""),
+            title="Set Max Recording Time",
+            ok="Save",
+            cancel="Cancel",
+            dimensions=(200, 30)
+        )
+        
+        response = window.run()
+        if response.clicked:
+            try:
+                minutes = int(response.text)
+                if minutes < 0:
+                    raise ValueError("Time must be positive")
+                
+                if minutes == 0:
+                    self.max_recording_time = None
+                    save_max_recording_time(None)
+                    rumps.notification("Max Recording Time", "Disabled", "Max recording time disabled")
+                else:
+                    self.max_recording_time = minutes * 60
+                    save_max_recording_time(self.max_recording_time)
+                    rumps.notification(
+                        "Max Recording Time", 
+                        "Set", 
+                        f"Max recording time set to {minutes} minutes"
+                    )
+                    
+                # Update AudioRecorder with new max time
+                self.audio_recorder.max_recording_time = self.max_recording_time
+                
+            except ValueError as e:
+                rumps.alert("Invalid Input", "Please enter a valid number of minutes")
     
     def quit_app(self, _):
         """Quit the application."""
@@ -85,31 +136,37 @@ class VoiceToTextApp(rumps.App):
     
     def _process_recording(self, audio_file):
         """Process the recorded audio file."""
-        try:
-            logger.info(f"Processing recording: {audio_file}")
-            # Transcribe audio
-            transcription = self.transcription_service.transcribe_audio(audio_file)
-            
-            if transcription:
-                logger.info(f"Transcription successful: {transcription}")
-                # Insert text at cursor
-                self.text_inserter.insert_text_with_shortcut(transcription)
-            else:
-                logger.warning("Empty transcription received")
-        except Exception as e:
-            logger.error(f"Error processing recording: {str(e)}")
-            rumps.alert("Error", str(e))
-        finally:
-            # Clean up temp file
+        def process():
             try:
-                os.unlink(audio_file)
-                logger.debug(f"Cleaned up temp file: {audio_file}")
+                logger.info(f"Processing recording: {audio_file}")
+                # Transcribe audio
+                transcription = self.transcription_service.transcribe_audio(audio_file)
+                
+                if transcription:
+                    logger.info(f"Transcription successful: {transcription}")
+                    # Insert text at cursor
+                    self.text_inserter.insert_text_with_shortcut(transcription)
+                else:
+                    logger.warning("Empty transcription received")
             except Exception as e:
-                logger.error(f"Error cleaning up temp file: {str(e)}")
-            
-            # Reset UI
-            self.title = "🎙️"
-            self.click_to_record_item.title = "Click to Start Recording"
+                logger.error(f"Error processing recording: {str(e)}")
+                rumps.alert("Error", str(e))
+            finally:
+                # Clean up temp file
+                try:
+                    os.unlink(audio_file)
+                    logger.debug(f"Cleaned up temp file: {audio_file}")
+                except Exception as e:
+                    logger.error(f"Error cleaning up temp file: {str(e)}")
+                
+                # Reset UI
+                self.title = "🎙️"
+                self.click_to_record_item.title = "Click to Start Recording"
+        
+        # Run processing in background thread
+        thread = threading.Thread(target=process)
+        thread.daemon = True
+        thread.start()
 
 if __name__ == "__main__":
     # Add support for clicking directly on the menu bar icon

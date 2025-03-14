@@ -3,9 +3,10 @@ import wave
 import tempfile
 import time
 import threading
+from src.circular_logger import logger, setup_logging
 
 class AudioRecorder:
-    def __init__(self):
+    def __init__(self, max_recording_time=None, stop_callback=None):
         self.audio = None
         self.stream = None
         self.frames = []
@@ -15,8 +16,11 @@ class AudioRecorder:
         self.channels = 1
         self.is_recording = False
         self.start_time = 0
+        self.max_recording_time = max_recording_time
+        self.stop_callback = stop_callback
         self._lock = threading.Lock()
         self._initialize_audio()
+        setup_logging()
 
     def _initialize_audio(self):
         """Initialize PyAudio instance if not already initialized."""
@@ -61,6 +65,24 @@ class AudioRecorder:
             )
             self.is_recording = True
             self.start_time = time.time()
+            
+            if self.max_recording_time is not None:
+                def timer():
+                    logger.info(f"Starting timer with max_recording_time: {self.max_recording_time} seconds")
+                    start_time = time.time()
+                    time.sleep(self.max_recording_time)
+                    elapsed = time.time() - start_time
+                    logger.info(f"Timer completed after {elapsed:.2f} seconds")
+                    with self._lock:
+                        if self.is_recording:
+                            audio_file = self.stop_recording()
+                            if self.stop_callback and audio_file:
+                                self.stop_callback(audio_file)
+                
+                timer_thread = threading.Thread(target=timer)
+                timer_thread.daemon = True
+                timer_thread.start()
+                
             return True
         except Exception as e:
             print(f"Start recording error: {str(e)}")
