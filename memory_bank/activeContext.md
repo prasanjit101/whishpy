@@ -26,6 +26,7 @@
 * Refactored API key management to load from a config file and save user input, enhancing security and usability.
 * Added LLM class for response generation and refactor transcription service to utilize LLM for audio transcriptions, improving modularity and code organization.
 * Enhanced LLM response generation with context.
+* Fixed a bug in `src/llm.py` where the `context` parameter could be `None`, causing a `TypeError` during string concatenation. Added a check to ensure `context` is always a string.
 * Updated UI elements for better user experience and maintainability.
 
 **Active Decisions:**
