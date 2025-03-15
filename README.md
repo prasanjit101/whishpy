@@ -21,17 +21,17 @@ This guide provides instructions for both the command-line script and the menu b
 1. **Install the required packages:**
 
 ```bash
-./build_app.sh
+./setup.sh
 ```
 
 2. **Run the app:**
 move the dist/Whishpy.app to your Applications folder
 
 3. **Run the app:**
-open the app and it will ask you to allow microphone access
+open the app and it will ask you to allow microphone access. Add it to login items. Add the required accessibility permissions
 
 4. **Use the app:**
-click the microphone icon in the menu bar and start recording
+click the microphone icon in the menu bar and start recording or click on "ask ai" to talk to an AI assistant.
 
 For more information on how to use the app, see the [setup.md](setup.md) file.
 
