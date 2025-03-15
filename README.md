@@ -3,6 +3,10 @@
 a python script that can run inside of mac m1 os and transcribe my voice to text using open ai api and enter the text at my current pointer. 
 I want to use the python script with mac's shortcuts or automations whichever is better
 
+## Demo
+
+[A demo of Whishpy](https://youtu.be/-CVD5dJUDyU)
+
 ## Voice-to-Text Transcription Setup Guide
 
 This guide provides instructions for both the command-line script and the menu bar application.
