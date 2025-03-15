@@ -46,7 +46,7 @@ For more information on how to use the app, see the [setup.md](setup.md) file.
 #### Click-to-Start/Stop Recording
 1. Click directly on the microphone icon in the menu bar to start recording
 2. Click again when you're done to stop recording and start transcription
-3. Alternatively, use the "Click to Start/Stop Recording" menu item
+3. Alternatively, use the "Start transcribing" menu item
 
 ### Troubleshooting
 

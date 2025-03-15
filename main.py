@@ -28,12 +28,12 @@ class VoiceToTextApp(rumps.App):
             max_recording_time=self.max_recording_time,
             stop_callback=self._process_recording
         )
-        self.transcription_service = TranscriptionService()
+        self.transcription_service = TranscriptionService(provider=self.provider)
         self.text_inserter = TextInserter()
         
         # Setup menu
-        self.click_to_record_item = rumps.MenuItem("Click to Start/Stop Recording", callback=self.toggle_recording)
-        self.prompt_item = rumps.MenuItem("Ask AI", callback=self.prompt_ai_with_selected_text)
+        self.click_to_record_item = rumps.MenuItem("Start transcribing", callback=self.toggle_recording)
+        self.prompt_item = rumps.MenuItem("Ask AI to write", callback=self.prompt_ai_with_selected_text)
         self.menu = [
             self.click_to_record_item,
             None,  # Separator
@@ -107,8 +107,9 @@ class VoiceToTextApp(rumps.App):
             return
         if self.audio_recorder.is_recording:
             self._stop_recording()
+            self.click_to_record_item.title = "Start transcribing"
         else:
-            self.click_to_record_item.title = "Click to Stop Recording"
+            self.click_to_record_item.title = "Stop transcribing"
             self._start_recording()
     
     def _start_recording(self):
@@ -151,7 +152,7 @@ class VoiceToTextApp(rumps.App):
                 return
         else:
             self.is_prompt_mode = True
-            self.prompt_item.title = "Generating...Click to Stop"
+            self.prompt_item.title = "Click to stop"
             self._start_recording()
         
     
@@ -203,8 +204,8 @@ class VoiceToTextApp(rumps.App):
 
                 # Reset UI
                 self.title = "🎙️"
-                self.prompt_item.title = "Prompt"
-                self.click_to_record_item.title = "Click to Start Recording"
+                self.prompt_item.title = "Ask AI to write"
+                self.click_to_record_item.title = "Start transcribing"
                 self.is_prompt_mode = False
 
         # Run processing in background thread
@@ -240,7 +241,7 @@ class VoiceToTextApp(rumps.App):
                 
                 # Reset UI
                 self.title = "🎙️"
-                self.click_to_record_item.title = "Click to Start Recording"
+                self.click_to_record_item.title = "Start transcribing"
         
         # Run processing in background thread
         thread = threading.Thread(target=process)
