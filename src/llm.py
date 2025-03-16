@@ -30,7 +30,7 @@ class LLM:
             return response.choices[0].message.content
         elif self.provider == "openai":
             response = self.openai.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-4o-mini-2024-07-18",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant. You are given a prompt and some context. \
                      Use the context to help you answer the prompt. Always respond concisely with only what's important \

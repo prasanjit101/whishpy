@@ -85,12 +85,20 @@ class TranscriptionService:
             try:
                 with open(audio_file_path, "rb") as audio_file:
                     try:
-                        response = llm.groq.audio.transcriptions.create(
-                            file=(audio_file_path, audio_file.read()),
-                            model="whisper-large-v3-turbo",
-                            language="en",
-                            timeout=10  # 10 second timeout
-                        )
+                        if self.provider == "groq":
+                            response = llm.groq.audio.transcriptions.create(
+                                file=(audio_file_path, audio_file.read()),
+                                model="whisper-large-v3-turbo",
+                                language="en",
+                                timeout=10  # 10 second timeout
+                            )
+                        elif self.provider == "openai":
+                            response = llm.openai.audio.transcriptions.create(
+                                file=(audio_file_path, audio_file.read()),
+                                model="whisper-1",
+                                language="en",
+                                timeout=10  # 10 second timeout
+                            )
                     except Exception as e:
                         print(f"Transcription attempt {attempt + 1} failed: {e}")
                         raise
@@ -107,7 +115,7 @@ class TranscriptionService:
         if not self.api_key:
             raise ValueError("API key is not set")
         
-        llm = LLM(self.api_key)
+        llm = LLM(self.api_key, self.provider)
         try:
             response = llm.generate_response(prompt, context)
             return response
