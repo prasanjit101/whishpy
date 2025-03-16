@@ -2,6 +2,7 @@
 
 **Recent Changes:**
 
+* Added provider selection (OpenAI or Groq) for API key configuration
 * Updated transcription method to use Groq Whisper
 * Removed outdated setup guide
 * Enhanced audio recording and transcription features with:
@@ -16,8 +17,9 @@
 
 **Next Steps:**
 
+* Update LLM class to fully support both OpenAI and Groq providers
 * If text insertion fails, copy the text to the clipboard
-* add language support for other languages - Hindi, Spanish, French, Japanese
+* Add language support for other languages - Hindi, Spanish, French, Japanese
 * Implemented prompt functionality in VoiceToTextApp, allowing users to generate responses based on selected text.
 * Added max recording time feature with settings management and background processing
 * Improved text insertion method by adding fallback to direct typing if paste shortcut fails.

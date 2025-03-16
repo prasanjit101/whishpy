@@ -26,6 +26,15 @@
 * Improved text insertion method with fallback to direct typing
 * UI updates for better user experience and maintainability
 
+**Provider Selection Flow:**
+
+1. User selects "Set API Key" from menu
+2. Application shows API key input and provider selection
+3. User enters API key and selects provider (OpenAI or Groq)
+4. Configuration saved to ~/.whishpy/config.json
+5. TranscriptionService loads provider and API key on initialization
+6. LLM instance created with selected provider and API key
+
 **Component Relationships:**
 
 * Menu bar -> AudioRecorder -> TranscriptionService -> TextInserter

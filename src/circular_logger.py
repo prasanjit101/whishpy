@@ -8,7 +8,7 @@ from queue import Queue
 from pathlib import Path
 
 class CircularLogger:
-    def __init__(self, max_size=1024*1024, log_file=None):  # 1MB default
+    def __init__(self, max_size=1024*90, log_file=None):  # 90kb default
         if log_file is None:
             # Use appropriate log path for both development and bundled app
             if getattr(sys, 'frozen', False):

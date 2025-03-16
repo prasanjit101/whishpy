@@ -28,7 +28,7 @@ class VoiceToTextApp(rumps.App):
             max_recording_time=self.max_recording_time,
             stop_callback=self._process_recording
         )
-        self.transcription_service = TranscriptionService(provider=self.provider)
+        self.transcription_service = TranscriptionService()
         self.text_inserter = TextInserter()
         
         # Setup menu
@@ -52,6 +52,7 @@ class VoiceToTextApp(rumps.App):
     def set_api_key(self, _):
         """Handle settings window for API key management."""
         logger.info("Opening API key settings")
+        # The transcription service now handles both API key and provider
         self.transcription_service._prompt_for_api_key()
 
     def set_max_recording_time(self, _):

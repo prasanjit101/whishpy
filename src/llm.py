@@ -4,11 +4,12 @@ from src.circular_logger import logger, setup_logging
 
 class LLM:
     def __init__(self, api_key: str, provider: str = "groq"):
-        self.provider = provider
         if provider == "groq":
+            self.provider = "groq"
             self.groq = Groq(api_key=api_key)
         elif provider == "openai":
-            openai.api_key = api_key
+            self.provider = "openai"
+            self.openai = openai.OpenAI(api_key=api_key)
         else:
             raise ValueError("Invalid provider. Must be 'groq' or 'openai'.")
         setup_logging()
@@ -28,7 +29,7 @@ class LLM:
             )
             return response.choices[0].message.content
         elif self.provider == "openai":
-            response = openai.chat.completions.create(
+            response = self.openai.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant. You are given a prompt and some context. \

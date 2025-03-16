@@ -24,13 +24,14 @@
 
 * macOS M1 or later
 * Virtual environment for dependencies
-* Groq API key
-* Python packages: rumps, pyaudio, groq, pynput
+* API key (Groq or OpenAI)
+* Python packages: rumps, pyaudio, groq, pynput, openai
 
 **Technical Constraints:**
 
 * macOS specific menu bar implementation
-* API key dependency
+* API key dependency (Groq or OpenAI)
+* Provider selection support
 * Audio permissions
 * Direct text insertion requires accessibility permissions
 * Improved API key loading with error handling for missing config file.
@@ -40,4 +41,4 @@
 **Dependencies:**
 
 * Python packages listed above
-* Groq API
+* Groq API or OpenAI API
