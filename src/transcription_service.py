@@ -90,6 +90,9 @@ class TranscriptionService:
                                 file=(audio_file_path, audio_file.read()),
                                 model="whisper-large-v3-turbo",
                                 language="en",
+                                prompt="You are a world class transcriptionist. You are given a recording of a conversation. \
+                                You are to transcribe the conversation into text exactly as the user says.\
+                                The only mutation that you can make is to fix any grammatical mistakes.",
                                 timeout=10  # 10 second timeout
                             )
                         elif self.provider == "openai":
