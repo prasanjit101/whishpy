@@ -11,10 +11,15 @@ I want to use the python script with mac's shortcuts or automations whichever is
 
 This guide provides instructions for both the command-line script and the menu bar application.
 
-### Prerequisites
+### Usage
 
-1. **Python 3.7+** (already installed on Mac M1)
-2. **Groq API Key** - You'll need to [create an account](https://platform.groq.com/signup) and get an API key
+1. Place your cursor where you want the transcribed text to appear
+2. Trigger the shortcut (using the keyboard shortcut you assigned)
+3. Speak clearly for the duration set (default is 5 seconds)
+4. Wait a moment for the audio to be processed and transcribed
+5. The transcribed text will be automatically pasted at your cursor position
+6. You can also press the 'ask AI' button to get assistance from an AI.
+7. Highlight the text you want to get assistance with and press the 'ask AI' button to manipulate the highlighted text.
 
 ### Automated Installation Steps
 
@@ -36,6 +41,18 @@ click the microphone icon in the menu bar and start recording or click on "ask a
 For more information on how to use the app, see the [setup.md](setup.md) file.
 
 
+
+### Usage
+
+1. Place your cursor where you want the transcribed text to appear
+2. Trigger the shortcut (using the keyboard shortcut you assigned)
+3. Speak clearly for the duration set (default is 5 seconds)
+4. Wait a moment for the audio to be processed and transcribed
+5. The transcribed text will be automatically pasted at your cursor position
+6. You can also press the 'ask AI' button to get assistance from an AI.
+7. Highlight the text you want to get assistance with and press the 'ask AI' button to manipulate the highlighted text.
+
+
 ### Using the Menu Bar App
 
 1. Click on the microphone icon (🎙️) in the menu bar
@@ -46,6 +63,8 @@ For more information on how to use the app, see the [setup.md](setup.md) file.
    - 🎙️ - Ready
    - 🔴 - Recording
    - ⏳ - Processing
+6. You can also press the 'ask AI' button to get assistance from an AI.
+7. Highlight the text you want to get assistance with and press the 'ask AI' button to manipulate the highlighted text.
 
 #### Click-to-Start/Stop Recording
 1. Click directly on the microphone icon in the menu bar to start recording

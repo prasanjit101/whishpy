@@ -5,17 +5,17 @@
 1. **Install the required packages:**
 
 ```bash
-./build_app.sh
+./setup.sh
 ```
 
 2. **Run the app:**
 move the dist/Whishpy.app to your Applications folder
 
 3. **Run the app:**
-open the app and it will ask you to allow microphone access
+open the app. Allow microphone access and add it to login items
 
 4. **Use the app:**
-click the microphone icon in the menu bar and start recording
+click the microphone icon in the menu bar and start recording or press the 'ask AI' button to get assistance from an AI.
 
 
 
@@ -94,6 +94,8 @@ source ~/.zshrc
 3. Speak clearly for the duration set (default is 5 seconds)
 4. Wait a moment for the audio to be processed and transcribed
 5. The transcribed text will be automatically pasted at your cursor position
+6. You can also press the 'ask AI' button to get assistance from an AI.
+7. Highlight the text you want to get assistance with and press the 'ask AI' button to manipulate the highlighted text.
 
 ### Menu Bar Application Setup
 
@@ -111,34 +113,3 @@ source ~/.zshrc
    - Open System Settings > General > Login Items
    - Click the "+" button
    - Navigate to your script and add it
-
-4. **Building a standalone app (optional):**
-   
-   Create a file named `setup.py` in the same directory as your script:
-   ```python
-   from setuptools import setup
-
-   APP = ['whish.py']
-   DATA_FILES = []
-   OPTIONS = {
-       'argv_emulation': True,
-       'plist': {
-           'LSUIElement': True,
-       },
-       'packages': ['rumps', 'pyaudio', 'groq', 'pyperclip', 'pynput'],
-   }
-
-   setup(
-       app=APP,
-       data_files=DATA_FILES,
-       options={'py2app': OPTIONS},
-       setup_requires=['py2app'],
-   )
-   ```
-
-   Then build the app:
-   ```bash
-   python3 setup.py py2app
-   ```
-
-   This will create a standalone app in the `dist` folder that you can move to your Applications folder.
