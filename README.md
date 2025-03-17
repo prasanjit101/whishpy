@@ -1,7 +1,6 @@
 # Whishpy
 
-a python script that can run inside of mac m1 os and transcribe my voice to text using open ai api and enter the text at my current pointer. 
-I want to use the python script with mac's shortcuts or automations whichever is better
+A free and open-source Wispr flow Alternative
 
 ## Demo
 
