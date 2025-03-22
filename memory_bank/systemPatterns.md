@@ -25,6 +25,9 @@
 * LLM integration for response generation
 * Improved text insertion method with fallback to direct typing
 * UI updates for better user experience and maintainability
+* Centralized configuration management through SettingsManager
+* Cached LLM instance for better performance
+* Type hints for better code clarity
 
 **Provider Selection Flow:**
 

@@ -21,10 +21,9 @@ class LLM:
             response = self.groq.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant. You are given a prompt and some context. \
-                     Use the context to help you answer the prompt. Always respond concisely with only what's important \
+                    {"role": "system", "content": "You are a helpful assistant who helps the user with their tasks. Always respond concisely with only what's important \
                      unless mentioned by the user otherwise."},
-                    {"role": "user", "content": prompt +  ("\n\nHere is some context that might be relevant to the prompt: " + context  if context else "")}
+                    {"role": "user", "content": prompt +  ("\n\nHere is a context that might be relevant to the prompt: " + context  if context else "")}
                 ]
             )
             return response.choices[0].message.content
@@ -32,10 +31,9 @@ class LLM:
             response = self.openai.chat.completions.create(
                 model="gpt-4o-mini-2024-07-18",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant. You are given a prompt and some context. \
-                     Use the context to help you answer the prompt. Always respond concisely with only what's important \
+                    {"role": "system", "content": "You are a helpful assistant who helps the user with their tasks. Always respond concisely with only what's important \
                      unless mentioned by the user otherwise."},
-                    {"role": "user", "content": prompt +  ("\n\nHere is some context that might be relevant to the prompt: " + context  if context else "")}
+                    {"role": "user", "content": prompt +  ("\n\nHere is a context that might be relevant to the prompt: " + context  if context else "")}
                 ]
             )
             return response.choices[0].message.content

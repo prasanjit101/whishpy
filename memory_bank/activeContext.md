@@ -1,19 +1,14 @@
-**Current Focus:** Implementing Groq Whisper transcription and enhancing error handling
+**Current Focus:** Refactoring codebase for better maintainability and performance
 
 **Recent Changes:**
 
-* Added provider selection (OpenAI or Groq) for API key configuration
-* Updated transcription method to use Groq Whisper
-* Removed outdated setup guide
-* Enhanced audio recording and transcription features with:
-  - Improved error handling
-  - Better resource management
-  - Proper cleanup procedures
-* Refactored code into modular components:
-  - AudioRecorder: Handles all audio recording
-  - TranscriptionService: Manages API communication
-  - TextInserter: Handles text insertion
-* Removed clipboard dependency
+* Created SettingsManager class for centralized configuration management
+* Added LLM instance caching in TranscriptionService
+* Improved type hints across the codebase
+* Updated system patterns documentation
+* Enhanced error handling and resource management
+* Refactored configuration handling to use SettingsManager
+* Added proper cleanup procedures for LLM instances
 
 **Next Steps:**
 
