@@ -19,7 +19,7 @@ class LLM:
 
         if self.provider == "groq":
             response = self.groq.chat.completions.create(
-                model="llama-3.3-70b-versatile",
+                model="meta-llama/llama-guard-4-12b",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant who helps the user with their tasks. Always respond concisely with only what's important \
                      unless mentioned by the user otherwise."},
