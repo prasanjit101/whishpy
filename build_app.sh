@@ -13,11 +13,11 @@ if [ -z "$VIRTUAL_ENV" ]; then
 fi
 
 echo "📦 Installing required packages..."
-pip install -r requirements.txt
-pip install py2app
+uv pip install -r requirements.txt
+uv pip install py2app
 
 echo "🏗️ Building application..."
-python setup.py py2app -A
+uv run python setup.py py2app -A
 
 if [ $? -eq 0 ]; then
     echo "✅ Build completed successfully!"

@@ -19,11 +19,11 @@ class LLM:
 
         if self.provider == "groq":
             response = self.groq.chat.completions.create(
-                model="meta-llama/llama-guard-4-12b",
+                model="moonshotai/kimi-k2-instruct",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant who helps the user with their tasks. Always respond concisely with only what's important \
-                     unless mentioned by the user otherwise."},
-                    {"role": "user", "content": prompt +  ("\n\nHere is a context that might be relevant to the prompt: " + context  if context else "")}
+                     unless mentioned by the user otherwise. " + ("\n\nHere is a context that might be relevant to the prompt: " + context  if context else "")},
+                    {"role": "user", "content": prompt}
                 ]
             )
             return response.choices[0].message.content
