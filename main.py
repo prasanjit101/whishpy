@@ -8,6 +8,11 @@ transcribe it with Groq, and insert it at your cursor position.
 import os
 import threading
 import rumps
+
+try:
+    from PyObjCTools import AppHelper
+except ImportError:  # pragma: no cover - PyObjC should be available on macOS
+    AppHelper = None
 from src.audio_recorder import AudioRecorder
 from src.transcription_service import TranscriptionService
 from src.text_inserter import TextInserter
@@ -15,7 +20,7 @@ from src.circular_logger import logger, setup_logging
 
 class VoiceToTextApp(rumps.App):
     def __init__(self):
-        super(VoiceToTextApp, self).__init__("🎙️", quit_button=None)
+        super(VoiceToTextApp, self).__init__("🎙️")
         setup_logging()
         logger.info("Application initialized")
         
@@ -48,6 +53,30 @@ class VoiceToTextApp(rumps.App):
             rumps.MenuItem("Quit", callback=self.quit_app)
         ]
         self.is_prompt_mode = False
+
+    def _call_on_main_thread(self, func, *args, **kwargs):
+        """Ensure UI updates run on the main thread."""
+        if threading.current_thread() is threading.main_thread() or AppHelper is None:
+            func(*args, **kwargs)
+        else:
+            AppHelper.callAfter(func, *args, **kwargs)
+
+    def _show_alert(self, title, message):
+        self._call_on_main_thread(rumps.alert, title, message)
+
+    def _reset_idle_ui_state(self):
+        def update():
+            self.title = "🎙️"
+            self.click_to_record_item.title = "Start transcribing"
+        self._call_on_main_thread(update)
+
+    def _reset_prompt_ui_state(self):
+        def update():
+            self.title = "🎙️"
+            self.prompt_item.title = "Ask AI to write"
+            self.click_to_record_item.title = "Start transcribing"
+            self.is_prompt_mode = False
+        self._call_on_main_thread(update)
     
     def set_api_key(self, _):
         """Handle settings window for API key management."""
@@ -188,13 +217,13 @@ class VoiceToTextApp(rumps.App):
 
             except ValueError as e:
                 logger.error(f"Value Error processing prompt recording: {str(e)}")
-                rumps.alert("Error", str(e))
+                self._show_alert("Error", str(e))
             except OSError as e:
                 logger.error(f"OS Error processing prompt recording: {str(e)}")
-                rumps.alert("Error", str(e))
+                self._show_alert("Error", str(e))
             except Exception as e:
                 logger.error(f"General Error processing prompt recording: {str(e)}")
-                rumps.alert("Error", str(e))
+                self._show_alert("Error", str(e))
             finally:
                 # Clean up temp file
                 try:
@@ -204,10 +233,7 @@ class VoiceToTextApp(rumps.App):
                     logger.error(f"Error cleaning up temp file: {str(e)}")
 
                 # Reset UI
-                self.title = "🎙️"
-                self.prompt_item.title = "Ask AI to write"
-                self.click_to_record_item.title = "Start transcribing"
-                self.is_prompt_mode = False
+                self._reset_prompt_ui_state()
 
         # Run processing in background thread
         thread = threading.Thread(target=process)
@@ -231,7 +257,7 @@ class VoiceToTextApp(rumps.App):
                     logger.warning("Empty transcription received")
             except Exception as e:
                 logger.error(f"Error processing recording: {str(e)}")
-                rumps.alert("Error", str(e))
+                self._show_alert("Error", str(e))
             finally:
                 # Clean up temp file
                 try:
@@ -241,8 +267,7 @@ class VoiceToTextApp(rumps.App):
                     logger.error(f"Error cleaning up temp file: {str(e)}")
                 
                 # Reset UI
-                self.title = "🎙️"
-                self.click_to_record_item.title = "Start transcribing"
+                self._reset_idle_ui_state()
         
         # Run processing in background thread
         thread = threading.Thread(target=process)

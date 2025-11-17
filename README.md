@@ -2,6 +2,8 @@
 
 A free and open-source Wispr flow Alternative
 
+**Not actively maintained anymore.**
+
 ## Demo
 
 [A demo of Whishpy](https://youtu.be/-CVD5dJUDyU)

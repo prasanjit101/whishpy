@@ -6,7 +6,7 @@ import threading
 from src.circular_logger import logger, setup_logging
 
 class AudioRecorder:
-    def __init__(self, max_recording_time=None, stop_callback=None):
+    def __init__(self, max_recording_time:int | None = None, stop_callback=None):
         self.audio = None
         self.stream = None
         self.frames = []
@@ -16,7 +16,7 @@ class AudioRecorder:
         self.channels = 1
         self.is_recording = False
         self.start_time = 0
-        self.max_recording_time = max_recording_time
+        self.max_recording_time: int | None = max_recording_time
         self.stop_callback = stop_callback
         self._lock = threading.Lock()
         self._initialize_audio()
@@ -70,7 +70,7 @@ class AudioRecorder:
                 def timer():
                     logger.info(f"Starting timer with max_recording_time: {self.max_recording_time} seconds")
                     start_time = time.time()
-                    time.sleep(self.max_recording_time)
+                    if self.max_recording_time: time.sleep(self.max_recording_time)
                     elapsed = time.time() - start_time
                     logger.info(f"Timer completed after {elapsed:.2f} seconds")
                     with self._lock:
