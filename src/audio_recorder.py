@@ -2,11 +2,10 @@ import pyaudio
 import wave
 import tempfile
 import time
-import threading
 from src.circular_logger import logger, setup_logging
 
 class AudioRecorder:
-    def __init__(self, max_recording_time:int | None = None, stop_callback=None):
+    def __init__(self, stop_callback=None):
         self.audio = None
         self.stream = None
         self.frames = []
@@ -16,9 +15,7 @@ class AudioRecorder:
         self.channels = 1
         self.is_recording = False
         self.start_time = 0
-        self.max_recording_time: int | None = max_recording_time
         self.stop_callback = stop_callback
-        self._lock = threading.Lock()
         self._initialize_audio()
         setup_logging()
 
@@ -55,7 +52,11 @@ class AudioRecorder:
 
         try:
             self.frames = []
-            self.stream = self.audio.open(
+            audio_instance = self.audio
+            if audio_instance is None:
+                raise RuntimeError("Audio interface is not initialized")
+
+            self.stream = audio_instance.open(
                 format=self.format_type,
                 channels=self.channels,
                 rate=self.sample_rate,
@@ -65,23 +66,6 @@ class AudioRecorder:
             )
             self.is_recording = True
             self.start_time = time.time()
-            
-            if self.max_recording_time is not None:
-                def timer():
-                    logger.info(f"Starting timer with max_recording_time: {self.max_recording_time} seconds")
-                    start_time = time.time()
-                    if self.max_recording_time: time.sleep(self.max_recording_time)
-                    elapsed = time.time() - start_time
-                    logger.info(f"Timer completed after {elapsed:.2f} seconds")
-                    with self._lock:
-                        if self.is_recording:
-                            audio_file = self.stop_recording()
-                            if self.stop_callback and audio_file:
-                                self.stop_callback(audio_file)
-                
-                timer_thread = threading.Thread(target=timer)
-                timer_thread.daemon = True
-                timer_thread.start()
                 
             return True
         except Exception as e:
@@ -107,9 +91,13 @@ class AudioRecorder:
             temp_filename = temp_file.name
             temp_file.close()
 
+            audio_instance = self.audio
+            if audio_instance is None:
+                raise RuntimeError("Audio interface is not initialized")
+
             with wave.open(temp_filename, 'wb') as wf:
                 wf.setnchannels(self.channels)
-                wf.setsampwidth(self.audio.get_sample_size(self.format_type))
+                wf.setsampwidth(audio_instance.get_sample_size(self.format_type))
                 wf.setframerate(self.sample_rate)
                 wf.writeframes(b''.join(self.frames))
 

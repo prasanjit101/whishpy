@@ -29,17 +29,6 @@ class SettingsManager:
         config = self._load_config()
         return config.get('api_key'), config.get('provider', 'groq')
         
-    def save_max_recording_time(self, max_time: Optional[int]) -> None:
-        """Save max recording time to config file"""
-        config = self._load_config()
-        config['max_recording_time'] = max_time
-        self._save_config(config)
-        
-    def load_max_recording_time(self) -> Optional[int]:
-        """Load max recording time from config file"""
-        config = self._load_config()
-        return config.get('max_recording_time')
-        
     def _load_config(self) -> dict:
         """Load the config file or return empty dict if it doesn't exist"""
         try:

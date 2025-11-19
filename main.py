@@ -24,13 +24,8 @@ class VoiceToTextApp(rumps.App):
         setup_logging()
         logger.info("Application initialized")
         
-        # Load max recording time from config
-        from src.config import load_max_recording_time
-        self.max_recording_time = load_max_recording_time()
-        
         # Initialize components
         self.audio_recorder = AudioRecorder(
-            max_recording_time=self.max_recording_time,
             stop_callback=self._process_recording
         )
         self.transcription_service = TranscriptionService()
@@ -46,11 +41,10 @@ class VoiceToTextApp(rumps.App):
             None,  # Separator
             {
                 "Settings": [
-                    rumps.MenuItem("Set Max Recording Time...", callback=self.set_max_recording_time),
                     rumps.MenuItem("Set API Key", callback=self.set_api_key),
                 ]
             },
-            rumps.MenuItem("Quit", callback=self.quit_app)
+            # rumps.MenuItem("Quit", callback=self.quit_app)
         ]
         self.is_prompt_mode = False
 
@@ -84,45 +78,6 @@ class VoiceToTextApp(rumps.App):
         # The transcription service now handles both API key and provider
         self.transcription_service._prompt_for_api_key()
 
-    def set_max_recording_time(self, _):
-        """Set maximum recording time in minutes."""
-        from src.config import save_max_recording_time
-        
-        window = rumps.Window(
-            message="Enter max recording time in minutes (0 to disable):",
-            default_text=str(self.max_recording_time // 60 if self.max_recording_time else ""),
-            title="Set Max Recording Time",
-            ok="Save",
-            cancel="Cancel",
-            dimensions=(200, 30)
-        )
-        
-        response = window.run()
-        if response.clicked:
-            try:
-                minutes = int(response.text)
-                if minutes < 0:
-                    raise ValueError("Time must be positive")
-                
-                if minutes == 0:
-                    self.max_recording_time = None
-                    save_max_recording_time(None)
-                    rumps.notification("Max Recording Time", "Disabled", "Max recording time disabled")
-                else:
-                    self.max_recording_time = minutes * 60
-                    save_max_recording_time(self.max_recording_time)
-                    rumps.notification(
-                        "Max Recording Time", 
-                        "Set", 
-                        f"Max recording time set to {minutes} minutes"
-                    )
-                    
-                # Update AudioRecorder with new max time
-                self.audio_recorder.max_recording_time = self.max_recording_time
-                
-            except ValueError as e:
-                rumps.alert("Invalid Input", "Please enter a valid number of minutes")
-    
     def quit_app(self, _):
         """Quit the application."""
         logger.info("Application shutdown initiated")
